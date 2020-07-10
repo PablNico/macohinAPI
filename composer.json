@@ -1,0 +1,26 @@
+{
+    "name": "nico/macohin-api",
+    "description": "API para pesquisa processual",
+    "license": "MIT",
+    "minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "PablNicolas",
+            "email": "pabloniicolas2@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Source\\": "source/"
+        },
+        "files": [
+            "source/Config.php"
+        ]
+    },
+    "require": {
+        "coffeecode/router": "1.0.*",
+        "sunra/php-simple-html-dom-parser": "1.5.2"
+
+    }
+    
+}
