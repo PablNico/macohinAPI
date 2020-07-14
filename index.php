@@ -24,7 +24,7 @@
     $router->group("trf1");
     $router->get("/numProcesso/{params}/{numProc}", "Trf1:numProcesso");
     $router->get("/nome/{nome}", "Trf1:nome");
-    $router->get("/cpf/{cpf}", "Trf1:cpf");
+    $router->get("/cpf/{cpf}", "Trf1:pesquisaCpf");
     $router->get("/nomeAdv/{nome}", "Trf1:nomeAdv");
     $router->get("/codOAB/{cod}", "Trf1:codOAB");
     $router->get("/numP rocOrigin/{num}", "Trf1:numProcOrigin");
