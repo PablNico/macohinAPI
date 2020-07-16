@@ -5,7 +5,7 @@
 
     class Trf1
     {
-        private $numProc, $nome, $cpf, $nomeAdv, $codOAB, $numProcOrigin;
+        private $numProc, $nome, $cpf, $nomeAdv, $codOAB, $numProcOrigin, $param;
         
 
         // Getters
@@ -42,6 +42,11 @@
             public function getNumProcOrigin()
             {
                     return $this->numProcOrigin;
+            }
+
+            public function getParam()
+            {
+                    return $this->param;
             }
         
         // Setters
@@ -91,12 +96,19 @@
 
                     return $this;
             }
+            
+            public function setParam($param)
+            {
+                    $this->param = $param;
+
+                    return $this;
+            }
 
         // Específicos API
-            public function numProcesso($data)
-            {
-                echo $this->extrairNumProcesso($data);
-            }
+            // public function numProcesso($data)
+            // {
+            //     echo $this->extrairNumProcesso($data);
+            // }
 
             public function nome($data)
             {
@@ -106,7 +118,10 @@
 
             public function cpf($data)
             {
-                echo $this->pesquisaCpf($data);
+                $this->setCpf($data['cpf']);
+                $this->setParam($data['params']);
+
+                echo $this->pesquisaCpf();
                 return;
             }
 
@@ -130,44 +145,45 @@
 
         // Específicos pesquisa
             
-            public function extrairNumProcesso($data)
+            public function extrairDados($site)
             {
-                //  	0045244-78.2014.4.01.3400
-                //
-                $iniciar = curl_init(URL_TRF1."processo.php/");
-                curl_setopt($iniciar, CURLOPT_RETURNTRANSFER, true);
-                $dados = [
-                    "proc" => $data['numProc'],
-                    "secao" => "DF",
-                    "pg" => "1",
-                    "origem_pagina" => "1",
-                    "enviar" => "Pesquisar",
-                    //"numeroProcesso" => "03AGdBq270hcVZ0ZrzhZ-oiYuFXl35NczKztt2DzBGJTACQxf0HspqJHaN1YDT6LfMFr8rKl3BvJ48AR2RslzdTMj8SWPrhE2jblc5OqMX-TwS941TDlhNv7SMKFQsRhpT7d7IVsLBua1wutXL0LnuWsATesJ-6YAaaXyMjQ0AVUSWzQ8JJW63v3AvhQ6g9hTozX3f7ide9z3Y8n1pRetNihEURTrzn0WC0IPTdLYIUQHD6r66BHEqFoEkeaNO-Z2dQkdtpDil9hx-uaUH-5SW-GzzsNT8k3NJXaZ68C6zR6Lm96I8G7HwoYv5YJxxvKp7h-hSKoW_ncRVblHxT1TOCq71dGzfyOcD5JSr7_h2lO4Wrb5_oxtOJzgksWNsuXHPaQ5AiqqyC-EU224s5-ivTvCkJvv7Ua21ig",
-                    "nmToken" => "numeroProcesso"
-                ];
+            // Apagar depois
+                // //  	0045244-78.2014.4.01.3400
+                // //
+                // $iniciar = curl_init(URL_TRF1."processo.php/");
+                // curl_setopt($iniciar, CURLOPT_RETURNTRANSFER, true);
+                // $dados = [
+                //     "proc" => $data['numProc'],
+                //     "secao" => "DF",
+                //     "pg" => "1",
+                //     "origem_pagina" => "1",
+                //     "enviar" => "Pesquisar",
+                //     //"numeroProcesso" => "03AGdBq270hcVZ0ZrzhZ-oiYuFXl35NczKztt2DzBGJTACQxf0HspqJHaN1YDT6LfMFr8rKl3BvJ48AR2RslzdTMj8SWPrhE2jblc5OqMX-TwS941TDlhNv7SMKFQsRhpT7d7IVsLBua1wutXL0LnuWsATesJ-6YAaaXyMjQ0AVUSWzQ8JJW63v3AvhQ6g9hTozX3f7ide9z3Y8n1pRetNihEURTrzn0WC0IPTdLYIUQHD6r66BHEqFoEkeaNO-Z2dQkdtpDil9hx-uaUH-5SW-GzzsNT8k3NJXaZ68C6zR6Lm96I8G7HwoYv5YJxxvKp7h-hSKoW_ncRVblHxT1TOCq71dGzfyOcD5JSr7_h2lO4Wrb5_oxtOJzgksWNsuXHPaQ5AiqqyC-EU224s5-ivTvCkJvv7Ua21ig",
+                //     "nmToken" => "numeroProcesso"
+                // ];
 
-                curl_setopt($iniciar, CURLOPT_POST, true);
+                // curl_setopt($iniciar, CURLOPT_POST, true);
                 
-                curl_setopt($iniciar, CURLOPT_POSTFIELDS, $dados);
+                // curl_setopt($iniciar, CURLOPT_POSTFIELDS, $dados);
 
-                $site = curl_exec($iniciar);
+                // $site = curl_exec($iniciar);
 
-                curl_close($iniciar); 
-                
+                // curl_close($iniciar); 
+            // Apagar depois
+
                 $dom = HtmlDomParser::str_get_html($site);
-                //$ret = $dom->getElementById("aba-processo")->childNodes(0)->childNodes(1)->innertext();
                 $json = array();
                 $titulos = ["Data", "Código", "Descrição", "Complemento"];
-                $limpa = [":", "\t", "<br/>", "&nbsp;"];
-                switch (strtolower($data['params'])) {
+                $limpa = [":", "\t", "\r" ,"\n", "<br/>", "&nbsp;"];
+                switch (strtolower($this->getParam())) {
                     case 'processo':
                         $th = $dom->find("div#aba-processo table th");
                         $td = $dom->find("div#aba-processo table td");
                         foreach ($th as $key => $ths) 
                         {
                             foreach ($td as $tds) {
-                                $newThs = str_replace($limpa, "", $ths->innertext());
-                                $newTd = str_replace($limpa, "", $td[$key]->innertext());
+                                $newThs = str_replace($limpa, "", $ths->text());
+                                $newTd = str_replace($limpa, "", $td[$key]->text());
                                 array_push($json, [$newThs => $newTd]);
                                 // echo "{$newThs} {$td[$key]->innertext()}<br>";
                                 break;
@@ -179,34 +195,29 @@
                         
                         foreach ($dom->find("div#aba-movimentacao table tr") as $tr) 
                         {
+                            $newLine = [];
                             $contador = 0;
                             foreach ($tr->find("td") as $td)
                             {
                                 $newTd = str_replace($limpa, "", $td->innertext());
-                                array_push($json, [$titulos[$contador] => $newTd]);
+                                array_push($newLine, [$titulos[$contador] => $newTd]);
                                 $contador+=1;
                             }
-                            echo "<br>";
+                            array_push($json, $newLine);
                         }
-
-                        # code...
                         break;
                 }
-                return json_encode($json);
+                echo json_encode($json, JSON_UNESCAPED_UNICODE);
 
             }
 
             /*
             * Extrai 
             */
-            public function pesquisaCpf($data)
+            public function pesquisaCpf() // 28722930191
             {
-                // 0045244-78.2014.4.01.3400
-                // 28722930191
-
+    
             // Parte 1    
-                //Pega cpf passado na url e atribui ao objeto
-                $this->setCpf($data['cpf']);
 
                 // Inicia cURL para envio via POST
                 $trfInicial = curl_init(URL_TRF1."/parte/listarPorCpfCnpj.php");
@@ -230,17 +241,18 @@
                 $site = curl_exec($trfInicial); // Atribui retorno da página com os dados enviados à variável
                 curl_close($trfInicial);
 
-                return $site;
             // Parte 2
+
                 //Inicia Scrapping das informações 
                 $dom = HtmlDomParser::str_get_html($site);
                 if ($dom->find("table a.listar-processo") != NULL) 
                 {
+                    
                     // Pega o primeiro link de referencia, onde mostra processo originário e número do processo
                     // Também "Limpa" URL para ser usado com URL_TRF1
-                    $href = str_replace("/consultaProcessual", "",$dom->find("table a.listar-processo")[0]->href);
+                    $href = str_replace("/consultaProcessual", "", $dom->find("table a.listar-processo")[0]->href);
 
-                    // Faz nova requisição POST no link que acabamos de recuperar
+                    // Faz nova requisição POST no link que acabamos de pegar
                     $trfHref = curl_init(URL_TRF1."{$href}");
                     curl_setopt($trfHref, CURLOPT_RETURNTRANSFER, true);
                     $site = curl_exec($trfHref);
@@ -256,6 +268,7 @@
                     $processo = $dom->find("table a")[0]->text(); 
                     $processoOrigin = $dom->find("table td")[1]->text();
 
+                    // Atribui os números de processos ao objeto
                     $this->setNumProc($processo);
                     $this->setNumProcOrigin($processoOrigin);
                     
@@ -263,11 +276,13 @@
                     // Última requisição para extrair todos os dados
                     $linkProcesso = str_replace(" ", "%20",$linkProcesso);
                     $trfDados = curl_init("https://processual.trf1.jus.br{$linkProcesso}");
-                    //curl_setopt($trfDados, CURLOPT_HTTPGET, true);
                     curl_setopt($trfDados, CURLOPT_RETURNTRANSFER, true);
                     curl_setopt($trfDados, CURLOPT_REFERER, "processual.trf1.jus.br/consultaProcessual/parte/listarPorCpfCnpj.php");
                     $site = curl_exec($trfDados); // Atribui retorno da página com os dados enviados à variável
                     curl_close($trfDados);
+                    
+                    $this->extrairDados($site);
+
 
                 }
                 else
