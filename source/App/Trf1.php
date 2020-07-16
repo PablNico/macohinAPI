@@ -173,7 +173,6 @@
 
                 $dom = HtmlDomParser::str_get_html($site);
                 $json = array();
-                $titulos = ["Data", "Código", "Descrição", "Complemento"];
                 $limpa = [":", "\t", "\r" ,"\n", "<br/>", "&nbsp;"];
                 switch (strtolower($this->getParam())) {
                     case 'processo':
@@ -185,14 +184,12 @@
                                 $newThs = str_replace($limpa, "", $ths->text());
                                 $newTd = str_replace($limpa, "", $td[$key]->text());
                                 array_push($json, [$newThs => $newTd]);
-                                // echo "{$newThs} {$td[$key]->innertext()}<br>";
                                 break;
                             }
                         }
                         break;
                     case 'movimentacao':
-                        // $tr = $dom->find("div#aba-processo table tr");
-                        
+                        $titulos = ["Data", "Código", "Descrição", "Complemento"];
                         foreach ($dom->find("div#aba-movimentacao table tr") as $tr) 
                         {
                             $newLine = [];
@@ -206,6 +203,39 @@
                             array_push($json, $newLine);
                         }
                         break;
+                    case 'distribuicao':
+                        $titulos = ["Data", "Descrição", "Juiz"];
+                        foreach ($dom->find("div#aba-distribuicao table tr") as $tr) 
+                        {
+                            $contador = 0;
+                            $newLine = [];
+                            foreach ($tr->find("td") as $td)
+                            {
+                                $newTd = str_replace($limpa, "", $td->innertext());
+                                array_push($newLine, [$titulos[$contador] => $newTd]);
+                                $contador+=1;
+                            }
+                            array_push($json, $newLine);
+                        }
+                        break;
+                    // case 'partes':
+                    //     $titulos = ["Tipo", "Ent", "OAB", "Nome", "Características"];
+                    //     foreach ($dom->find("div#aba-partes tbody") as $tr) 
+                    //     {
+                    //         var_dump($tr);
+                    //         // echo "teste";
+                    //         // $contador = 0;
+                    //         // $newLine = [];
+                    //         // foreach ($tr->find("td") as $td)
+                    //         // {
+                    //         //     $newTd = str_replace($limpa, "", $td->innertext());
+                    //         //     array_push($newLine, [$titulos[$contador] => $newTd]);
+                    //         //     $contador+=1;
+                    //         // }
+                    //         // array_push($json, $newLine);
+                    //     }
+                    //     break;
+
                 }
                 echo json_encode($json, JSON_UNESCAPED_UNICODE);
 
