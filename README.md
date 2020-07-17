@@ -8,7 +8,25 @@ Essa API busca, através do CPF, informações de processos dos seguintes Tribun
 - TRF4 - Em desenvolvimento;
 - TRF5 - Não implementado.
 
+#### Forma de instalação
 
+- Linux:  
+
+No terminal, vá até a pasta em que deseja instalar a API:
+
+```bash 
+# cd /var/www
+# git clone https://github.com/PablNico/macohinAPI.git
+# composer u
+```
+
+- Windows:
+
+Baixe os arquivos do GitHub e com o CMD aberto na pasta desejada e com o Composer instalado:
+
+``````bash
+C:\xampp\htdocs\macohinAPI> composer u
+``````
 
 #### Forma de utilização
 
@@ -25,4 +43,6 @@ Por enquanto apenas a rota do TRF1 está implementada, contendo um *endpoint* qu
 | /trf1/cpf/*movimentacao/{numCpf}* | Retorna os dados referentes a movimentação: Data, Código, Descrição, e Complemento. |
 
 A busca por número de processo e número de processo originário ainda está em desenvolvimento. As informações são retornadas em formato JSON. 
+
+\
 
