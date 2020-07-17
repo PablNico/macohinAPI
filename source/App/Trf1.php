@@ -5,7 +5,7 @@
 
     class Trf1
     {
-        private $numProc, $nome, $cpf, $nomeAdv, $codOAB, $numProcOrigin, $param;
+        private $numProc, $cpf, $numProcOrigin, $param;
         
 
         // Getters
@@ -15,30 +15,13 @@
             }
 
             
-            public function getNome()
-            {
-                    return $this->nome;
-            }
-
             
             public function getCpf()
             {
                     return $this->cpf;
             }
 
-            
-            public function getNomeAdv()
-            {
-                    return $this->nomeAdv;
-            }
-
-            
-            public function getCodOAB()
-            {
-                    return $this->codOAB;
-            }
-
-         
+        
             public function getNumProcOrigin()
             {
                     return $this->numProcOrigin;
@@ -58,14 +41,6 @@
             }
 
         
-            public function setNome($nome)
-            {
-                    $this->nome = $nome;
-
-                    return $this;
-            }
-
-        
             public function setCpf($cpf)
             {
                 $limpa = [".", "-"];
@@ -73,23 +48,6 @@
                 return $this;
             }
 
-        
-            public function setNomeAdv($nomeAdv)
-            {
-                    $this->nomeAdv = $nomeAdv;
-
-                    return $this;
-            }
-
-        
-            public function setCodOAB($codOAB)
-            {
-                    $this->codOAB = $codOAB;
-
-                    return $this;
-            }
-
-        
             public function setNumProcOrigin($numProcOrigin)
             {
                     $this->numProcOrigin = $numProcOrigin;
@@ -105,16 +63,7 @@
             }
 
         // Específicos API
-            // public function numProcesso($data)
-            // {
-            //     echo $this->extrairNumProcesso($data);
-            // }
 
-            public function nome($data)
-            {
-                echo json_encode(["Nome:" => "{$data['nome']}"]);
-                return;
-            }
 
             public function cpf($data)
             {
@@ -125,17 +74,7 @@
                 return;
             }
 
-            public function nomeAdv($data)
-            {
-                echo json_encode(["Nome Advogado:" => "{$data['nome']}"]);
-                return;
-            }
 
-            public function codOAB($data)
-            {
-                echo json_encode(["Código OAB:" => "{$data['cod']}"]);
-                return;
-            }
 
             public function numProcOrigin($data)
             {
@@ -174,6 +113,7 @@
                 $dom = HtmlDomParser::str_get_html($site);
                 $json = array();
                 $limpa = [":", "\t", "\r" ,"\n", "<br/>", "&nbsp;"];
+
                 switch (strtolower($this->getParam())) {
                     case 'processo':
                         $th = $dom->find("div#aba-processo table th");
@@ -188,6 +128,8 @@
                             }
                         }
                         break;
+
+
                     case 'movimentacao':
                         $titulos = ["Data", "Código", "Descrição", "Complemento"];
                         foreach ($dom->find("div#aba-movimentacao table tr") as $tr) 
@@ -203,6 +145,8 @@
                             array_push($json, $newLine);
                         }
                         break;
+
+
                     case 'distribuicao':
                         $titulos = ["Data", "Descrição", "Juiz"];
                         foreach ($dom->find("div#aba-distribuicao table tr") as $tr) 
@@ -218,6 +162,8 @@
                             array_push($json, $newLine);
                         }
                         break;
+
+
                     // case 'partes':
                     //     $titulos = ["Tipo", "Ent", "OAB", "Nome", "Características"];
                     //     foreach ($dom->find("div#aba-partes tbody") as $tr) 
@@ -241,9 +187,6 @@
 
             }
 
-            /*
-            * Extrai 
-            */
             public function pesquisaCpf() // 28722930191
             {
     
@@ -317,7 +260,7 @@
                 }
                 else
                 {
-                    echo $dom->find("div.notice")[0]->text();
+                    echo json_encode("Mensagem =>", $dom->find("div.notice")[0]->text());
                 }
 
 
