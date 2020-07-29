@@ -4,6 +4,7 @@
     require __DIR__."/vendor/autoload.php";
 
     use CoffeeCode\Router\Router;
+    use thiagoalessio\TesseractOCR\TesseractOCR;
 
     $router = new Router(URL_BASE);
 
@@ -23,23 +24,19 @@
 
     $router->group("trf1");
     $router->get("/numProcesso/{params}/{numProc}", "Trf1:numProcesso");
-    $router->get("/nome/{nome}", "Trf1:nome");
     $router->get("/cpf/{params}/{cpf}", "Trf1:cpf");
-    $router->get("/nomeAdv/{nome}", "Trf1:nomeAdv");
-    $router->get("/codOAB/{cod}", "Trf1:codOAB");
-    $router->get("/numP rocOrigin/{num}", "Trf1:numProcOrigin");
+    $router->get("/numProcOrigin/{num}", "Trf1:numProcOrigin");
     
     /* 
-    * Rotas TRF4
+    * Rotas TRF2
     */
 
-    $router->group("trf4");
-    $router->get("/numProcesso/{numProc}", "Trf4:numProcesso");
-    $router->get("/nome/{nome}", "Trf4:nome");
-    $router->get("/cpf/{cpf}", "Trf4:cpf");
-    $router->get("/nomeAdv/{nome}", "Trf4:numProcChave");
-    $router->get("/codOAB/{cod}", "Trf4:codOAB");
-    $router->get("/numProcOrigin/{num}", "Trf4:numProcOrigin");
+    $router->group("trf2");
+    $router->get("/ocr", "Trf2:ocr");
+    $router->get("/download", "Trf2:down");
+    $router->get("/captcha", "Trf2:captcha");
+    $router->get("/{uf}/numProcesso/{numProc}", "Trf2:numProcesso");
+    $router->get("/{uf}/cpf/{cpf}", "Trf2:cpf");
     
 
     /* 

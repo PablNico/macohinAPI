@@ -86,35 +86,36 @@
             
             public function extrairDados($site)
             {
-            // Apagar depois
-                // //  	0045244-78.2014.4.01.3400
-                // //
-                // $iniciar = curl_init(URL_TRF1."processo.php/");
-                // curl_setopt($iniciar, CURLOPT_RETURNTRANSFER, true);
-                // $dados = [
-                //     "proc" => $data['numProc'],
-                //     "secao" => "DF",
-                //     "pg" => "1",
-                //     "origem_pagina" => "1",
-                //     "enviar" => "Pesquisar",
-                //     //"numeroProcesso" => "03AGdBq270hcVZ0ZrzhZ-oiYuFXl35NczKztt2DzBGJTACQxf0HspqJHaN1YDT6LfMFr8rKl3BvJ48AR2RslzdTMj8SWPrhE2jblc5OqMX-TwS941TDlhNv7SMKFQsRhpT7d7IVsLBua1wutXL0LnuWsATesJ-6YAaaXyMjQ0AVUSWzQ8JJW63v3AvhQ6g9hTozX3f7ide9z3Y8n1pRetNihEURTrzn0WC0IPTdLYIUQHD6r66BHEqFoEkeaNO-Z2dQkdtpDil9hx-uaUH-5SW-GzzsNT8k3NJXaZ68C6zR6Lm96I8G7HwoYv5YJxxvKp7h-hSKoW_ncRVblHxT1TOCq71dGzfyOcD5JSr7_h2lO4Wrb5_oxtOJzgksWNsuXHPaQ5AiqqyC-EU224s5-ivTvCkJvv7Ua21ig",
-                //     "nmToken" => "numeroProcesso"
-                // ];
+                // Apagar depois
+                    // //  	0045244-78.2014.4.01.3400
+                    // //
+                    // $iniciar = curl_init(URL_TRF1."processo.php/");
+                    // curl_setopt($iniciar, CURLOPT_RETURNTRANSFER, true);
+                    // $dados = [
+                    //     "proc" => $data['numProc'],
+                    //     "secao" => "DF",
+                    //     "pg" => "1",
+                    //     "origem_pagina" => "1",
+                    //     "enviar" => "Pesquisar",
+                    //     //"numeroProcesso" => "03AGdBq270hcVZ0ZrzhZ-oiYuFXl35NczKztt2DzBGJTACQxf0HspqJHaN1YDT6LfMFr8rKl3BvJ48AR2RslzdTMj8SWPrhE2jblc5OqMX-TwS941TDlhNv7SMKFQsRhpT7d7IVsLBua1wutXL0LnuWsATesJ-6YAaaXyMjQ0AVUSWzQ8JJW63v3AvhQ6g9hTozX3f7ide9z3Y8n1pRetNihEURTrzn0WC0IPTdLYIUQHD6r66BHEqFoEkeaNO-Z2dQkdtpDil9hx-uaUH-5SW-GzzsNT8k3NJXaZ68C6zR6Lm96I8G7HwoYv5YJxxvKp7h-hSKoW_ncRVblHxT1TOCq71dGzfyOcD5JSr7_h2lO4Wrb5_oxtOJzgksWNsuXHPaQ5AiqqyC-EU224s5-ivTvCkJvv7Ua21ig",
+                    //     "nmToken" => "numeroProcesso"
+                    // ];
 
-                // curl_setopt($iniciar, CURLOPT_POST, true);
-                
-                // curl_setopt($iniciar, CURLOPT_POSTFIELDS, $dados);
+                    // curl_setopt($iniciar, CURLOPT_POST, true);
+                    
+                    // curl_setopt($iniciar, CURLOPT_POSTFIELDS, $dados);
 
-                // $site = curl_exec($iniciar);
+                    // $site = curl_exec($iniciar);
 
-                // curl_close($iniciar); 
-            // Apagar depois
+                    // curl_close($iniciar); 
+                // Apagar depois
 
                 $dom = HtmlDomParser::str_get_html($site);
                 $json = array();
                 $limpa = [":", "\t", "\r" ,"\n", "<br/>", "&nbsp;"];
 
-                switch (strtolower($this->getParam())) {
+                switch (strtolower($this->getParam())) 
+                {
                     case 'processo':
                         $th = $dom->find("div#aba-processo table th");
                         $td = $dom->find("div#aba-processo table td");
@@ -184,7 +185,6 @@
 
                 }
                 echo json_encode($json, JSON_UNESCAPED_UNICODE);
-
             }
 
             public function pesquisaCpf() // 28722930191
