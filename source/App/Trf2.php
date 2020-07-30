@@ -38,7 +38,8 @@
     // Setter
         public function setSession($session) // Gera MD5 válido para ser usado numa sessão
         {
-                $this->session = md5($session);
+                // $this->session = md5($session);
+                $this->session = "2f43b42fd833d1e77420a8dae7419000";
 
                 return $this;
         }
@@ -71,6 +72,7 @@
         {
             $this->setUf($data['uf']);
             $this->setCpf($data['cpf']);
+            $this->primeiroAcessoCpf();
         }
 
         public function numProcesso($data)
@@ -81,15 +83,57 @@
 
     // Específicos scraping
         
-       public function primeiroAcesso()
-       {
+       public function primeiroAcessoCpf()
+       {    
             $trfInicial = curl_init(TRF2_BASE."externo_controlador.php?acao=processo_consulta_publica");
             curl_setopt($trfInicial, CURLOPT_RETURNTRANSFER, true);
-
-            //curl_setopt($c, CURLOPT_COOKIE, 'PHPSESSID=' . $_COOKIE['PHPSESSID']); Teste
+            $dados = [
+                "acao" => "processo_consulta_publica",
+                "acao_retorno" => "processo_consulta_publica",
+                "hdnInfraTipoPagina" => "1",
+                "sbmNovo" => "Consultar",
+                "rdoTipo" => "CPF",
+                "txtCpfCnpj" => $this->getCpf(),
+                "hdnInfraSelecoes" => "Infra"
+            ];
+            curl_setopt($trfInicial, CURLOPT_POST, true);
+            curl_setopt($trfInicial, CURLOPT_POSTFIELDS, $dados);
+            curl_setopt($trfInicial, CURLOPT_COOKIE, "PHPSESSID=2f43b42fd833d1e77420a8dae7419000");
+            $site = curl_exec($trfInicial); // Atribui retorno da página com os dados enviados à variável
+            curl_close($trfInicial);
+            $dom = HtmlDomParser::str_get_html($site);
+            if(!$dom->find("input#txtCaptcha"))
+            {
+                if($dom->find("table.infraTable a"))
+                {
+                    $href = $dom->find("table.infraTable a")[0]->href;
+                    $trfTable = curl_init(TRF2_BASE.$href);
+                    curl_setopt($trfTable, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($trfTable, CURLOPT_COOKIE, "PHPSESSID=2f43b42fd833d1e77420a8dae7419000");
+                    $site = curl_exec($trfTable); // Atribui retorno da página com os dados enviados à variável
+                    curl_close($trfTable);
+                    $dom = HtmlDomParser::str_get_html($site);
+                    $dadosBrutos = $dom->find("form#frmProcessoLista")[0]->innertext();
+                }
+            }
+            else
+            {
+                $ch = curl_init(TRF2_BASE."lib/captcha/Captcha.php");
+                $fp = fopen("captcha.png" , "wb");
+                curl_setopt($ch, CURLOPT_FILE, $fp);
+                curl_setopt($ch, CURLOPT_COOKIE, "PHPSESSID=2f43b42fd833d1e77420a8dae7419000");
+                curl_setopt($ch, CURLOPT_HEADER, 0);
+                curl_exec($ch);
+                curl_close($ch);
+                fclose($fp);
+            }
 
        }
 
+       public function extrairDados($dadosBrutos)
+       {
+        return 0;
+       }
 
 
     }
