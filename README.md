@@ -2,10 +2,10 @@
 
 Essa API busca, através do CPF, informações de processos dos seguintes Tribunais Regionais Federais:
 
-- **TRF1** - Implementado, Parcialmente concluído;
-- TRF2 - Não implementado;
+- **TRF1** - Implementado, Concluído mas passando por melhorias;
+- TRF2 - Implementado, parcialmente concluído;
 - TRF3 - Não implementado;
-- TRF4 - Em desenvolvimento;
+- TRF4 - Implementado na Intranet, concluído fora do modelo atual;
 - TRF5 - Não implementado.
 
 #### Forma de instalação
