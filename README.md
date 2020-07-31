@@ -3,7 +3,7 @@
 Essa API busca, através do CPF, informações de processos dos seguintes Tribunais Regionais Federais:
 
 - **TRF1** - Implementado, Concluído mas passando por melhorias;
-- TRF2 - Implementado, parcialmente concluído;
+- **TRF2** - Implementado, parcialmente concluído;
 - TRF3 - Não implementado;
 - TRF4 - Implementado na Intranet, concluído fora do modelo atual;
 - TRF5 - Não implementado.
@@ -44,5 +44,10 @@ Por enquanto apenas a rota do TRF1 está implementada, contendo um *endpoint* qu
 
 A busca por número de processo e número de processo originário ainda está em desenvolvimento. As informações são retornadas em formato JSON. 
 
-\
+- TRF2
+
+| Rota                                  | Ação                                                         |
+| ------------------------------------- | ------------------------------------------------------------ |
+| /trf2/{estado}/*cpf/{numCpf}*         | Retorna os dados relacionados a **Capa do processo, Assuntos, Partes e representantes, informações adicionais** de determinado CPF e estado. |
+| /trf2/{estado}/*numProceso/{numProc}* | Retorna os dados relacionados a **Capa do processo, Assuntos, Partes e representantes, informações adicionais** de determinado numero de processo e estado. |
 

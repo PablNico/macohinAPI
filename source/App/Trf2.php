@@ -1,6 +1,7 @@
 <?php
     namespace Source\App;
-    define("TRF2_BASE", "https://eproc.jfrj.jus.br/eproc/");
+    define("JFRJ", "https://eproc.jfrj.jus.br/eproc/");
+    define("JFES", "https://eproc.jfes.jus.br/eproc/");
     use thiagoalessio\TesseractOCR\TesseractOCR;
     use Sunra\PhpSimple\HtmlDomParser;
 
@@ -34,7 +35,7 @@
                 return $this->uf;
         }
 
-
+    // Setters
         public function setCpf($cpf)
         {
                 $this->cpf = $cpf;
@@ -61,37 +62,64 @@
         
         public function cpf($data)
         {
-            $this->setUf($data['uf']);
+            $this->setUf(strtolower($data['uf']));
             $this->setCpf($data['cpf']);
-            $this->acessoCpf();
+            $this->acessoCpf("cpf");
         }
 
         public function numProcesso($data)
         {
-            $this->setUf($data['uf']);
-            $this->setCpf($data['numProc']);
+            $this->setUf(strtolower($data['uf']));
+            $this->setNumProc($data['numProc']);
+            $this->acessoCpf("numProc");
         }
 
     // Específicos scraping
         
-       public function acessoCpf()
+       public function acessoCpf($tipo)
        {    
-            $trfInicial = curl_init(TRF2_BASE."externo_controlador.php?acao=processo_consulta_publica");
+           if($this->getUf() == "es")
+           {
+               $trfInicial = curl_init(JFES."externo_controlador.php?acao=processo_consulta_publica");
+           }
+
+           else
+           {
+               $trfInicial = curl_init(JFRJ."externo_controlador.php?acao=processo_consulta_publica");
+           }
+
             curl_setopt($trfInicial, CURLOPT_RETURNTRANSFER, true);
-            $dados = [
-                "acao" => "processo_consulta_publica",
-                "acao_retorno" => "processo_consulta_publica",
-                "hdnInfraTipoPagina" => "1",
-                "sbmNovo" => "Consultar",
-                "rdoTipo" => "CPF",
-                "txtCpfCnpj" => $this->getCpf(),
-                "hdnInfraSelecoes" => "Infra"
-            ];
+
+            if($tipo == "cpf")
+            {
+                $dados = [
+                    "acao" => "processo_consulta_publica",
+                    "acao_retorno" => "processo_consulta_publica",
+                    "hdnInfraTipoPagina" => "1",
+                    "sbmNovo" => "Consultar",
+                    "rdoTipo" => "CPF",
+                    "txtCpfCnpj" => $this->getCpf(),
+                    "hdnInfraSelecoes" => "Infra"
+                ];
+            }
+            elseif($tipo == "numProc")
+            {
+                $dados = [
+                    "acao" => "processo_consulta_publica",
+                    "acao_retorno" => "processo_consulta_publica",
+                    "hdnInfraTipoPagina" => "1",
+                    "sbmNovo" => "Consultar",
+                    "rdoTipo" => "CPF",
+                    "txtNumProcesso" => $this->getNumProc(),
+                    "hdnInfraSelecoes" => "Infra"
+                ];
+            }
             curl_setopt($trfInicial, CURLOPT_POST, true);
             curl_setopt($trfInicial, CURLOPT_POSTFIELDS, $dados);
             curl_setopt($trfInicial, CURLOPT_COOKIE, $this->getSession());
             $site = curl_exec($trfInicial); // Atribui retorno da página com os dados enviados à variável
             curl_close($trfInicial);
+            print_r($site);
             $dom = HtmlDomParser::str_get_html($site);
             if(!$dom->find("input#txtCaptcha"))
             {
@@ -99,7 +127,14 @@
             }
             else
             {
-                $ch = curl_init(TRF2_BASE."lib/captcha/Captcha.php");
+                if($this->getUf() == "es")
+                {
+                    $ch = curl_init(JFES."lib/captcha/Captcha.php");
+                }
+                else
+                {
+                    $ch = curl_init(JFRJ."lib/captcha/Captcha.php");
+                }
                 $fp = fopen("captcha.png" , "wb");
                 
                 curl_setopt($ch, CURLOPT_FILE, $fp);
@@ -113,22 +148,23 @@
                 
                 $dados["txtCaptcha"] = (new TesseractOCR("captcha-limpo.png"))->run(); // Roda OCR
               
-                $trfInicial = curl_init(TRF2_BASE."externo_controlador.php?acao=processo_consulta_publica");
+                if($this->getUf() == "es")
+                {
+                    $trfInicial = curl_init(JFES."externo_controlador.php?acao=processo_consulta_publica");
+                }
+                else
+                {
+                    $trfInicial = curl_init(JFRJ."externo_controlador.php?acao=processo_consulta_publica");
+                }
                 curl_setopt($trfInicial, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($trfInicial, CURLOPT_POST, true);
                 curl_setopt($trfInicial, CURLOPT_POSTFIELDS, $dados);
                 curl_setopt($trfInicial, CURLOPT_COOKIE, $this->getSession());
                 $site = curl_exec($trfInicial); // Atribui retorno da página com os dados enviados à variável
                 curl_close($trfInicial);
-                $dom = HtmlDomParser::str_get_html($site);
-                if(!$dom->find("input#txtCaptcha"))
-                {
-                    $this->validaSite($site);
-                }
-                else
-                {
-                    $this->acessoCpf();
-                }
+
+                $this->acessoCpf($tipo);
+                
 
             }
 
@@ -140,20 +176,51 @@
             if($dom->find("table.infraTable a"))
             {
                 $href = $dom->find("table.infraTable a")[0]->href;
-                $trfTable = curl_init(TRF2_BASE.$href);
+                if($this->getUf() == "es")
+                {
+                    $trfTable = curl_init(JFES.$href);
+                }
+                else
+                {
+                    $trfTable = curl_init(JFRJ.$href);
+                }
                 curl_setopt($trfTable, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($trfTable, CURLOPT_COOKIE, $this->getSession());
                 $site = curl_exec($trfTable); // Atribui retorno da página com os dados enviados à variável
                 curl_close($trfTable);
                 $dom = HtmlDomParser::str_get_html($site);
                 $dadosBrutos = $dom->find("form#frmProcessoLista")[0]->innertext();
-                echo $dadosBrutos;
+                $this->extrairDados($dadosBrutos);
             }
        }
 
        public function extrairDados($dadosBrutos)
        {
-        return 0;
+        $dom = HtmlDomParser::str_get_html($dadosBrutos);
+        foreach($dom->find("fieldset") as $fieldset)
+        {
+            $json = [];
+            foreach($fieldset->find("legend") as $titulo)
+            {
+                array_push($json, $titulo->innertext());
+                $subtitulo = [];
+                $valor = [];
+                echo $titulo->innertext();
+
+                foreach($fieldset->find("label") as $key => $label)
+                {
+                    if($key%2 == 0)
+                    {
+                        array_push($subtitulo, $label->innertext());
+                    }
+                    elseif($key%2 == 1)
+                    {
+                        array_push($valor, $label->innertext());
+                    }
+                }
+            }
+        }
+        // Tabela
        }
 
 

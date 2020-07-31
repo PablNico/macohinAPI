@@ -32,9 +32,6 @@
     */
 
     $router->group("trf2");
-    $router->get("/ocr", "Trf2:ocr");
-    $router->get("/download", "Trf2:down");
-    $router->get("/captcha", "Trf2:captcha");
     $router->get("/{uf}/numProcesso/{numProc}", "Trf2:numProcesso");
     $router->get("/{uf}/cpf/{cpf}", "Trf2:cpf");
     
@@ -53,4 +50,3 @@
     }
 
 
-    
