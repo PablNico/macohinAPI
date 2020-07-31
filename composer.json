@@ -20,10 +20,7 @@
     "require": {
         "coffeecode/router": "1.0.*",
         "sunra/php-simple-html-dom-parser": "1.5.2",
-        "thiagoalessio/tesseract_ocr": "^2.9",
-        "phpunit/php-code-coverage": "^7.0",
-        "orbitale/imagemagick-php": "^3.0"
-
+        "thiagoalessio/tesseract_ocr": "^2.9"
     }
     
 }

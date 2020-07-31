@@ -1,9 +1,0 @@
-composer.phar
-composer.lock
-vendor/
-build/
-
-Tests/Resources/outputs/*
-!Tests/Resources/outputs/.gitkeep
-
-phpunit.xml
