@@ -1,7 +1,7 @@
 <?php
     namespace Source\App;
     define("URL_TRF1", "https://processual.trf1.jus.br/consultaProcessual/");
-    use Sunra\PhpSimple\HtmlDomParser;
+    use KubAT\PhpSimple\HtmlDomParser;
 
     class Trf1
     {

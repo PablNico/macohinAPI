@@ -18,9 +18,10 @@
         ]
     },
     "require": {
-        "coffeecode/router": "1.0.*",
+        "coffeecode/router": "^1.0",
         "sunra/php-simple-html-dom-parser": "1.5.2",
-        "thiagoalessio/tesseract_ocr": "^2.9"
+        "thiagoalessio/tesseract_ocr": "^2.9",
+        "kub-at/php-simple-html-dom-parser": "^1.9"
     }
     
 }

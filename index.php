@@ -35,6 +35,14 @@
     $router->get("/{uf}/numProcesso/{numProc}", "Trf2:numProcesso");
     $router->get("/{uf}/cpf/{cpf}", "Trf2:cpf");
     
+    /* 
+    * Rotas TRF3
+    */
+
+    $router->group("trf3");
+    $router->get("/numProcesso/{numProc}", "Trf3:numProcesso");
+    $router->get("/cpf/{cpf}", "Trf3:cpf");
+    
 
     /* 
     * Rotas Erros

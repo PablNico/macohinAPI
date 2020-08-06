@@ -2,8 +2,10 @@
     namespace Source\App;
     define("JFRJ", "https://eproc.jfrj.jus.br/eproc/");
     define("JFES", "https://eproc.jfes.jus.br/eproc/");
+    define("CAPTCHA", "lib/captcha/Captcha.php");
+    define("CONTROLADOR", "externo_controlador.php?acao=processo_consulta_publica");
     use thiagoalessio\TesseractOCR\TesseractOCR;
-    use Sunra\PhpSimple\HtmlDomParser;
+    use KubAT\PhpSimple\HtmlDomParser;
 
    
 
@@ -75,17 +77,21 @@
         }
 
     // Específicos scraping
-        
+       public function limpaCaptcha()
+       {
+           system("magick convert -colorspace Gray -level 0,30%,0,1 -crop 140x100+30+10 captchaTRF2.png captcha-TRF2-limpo.png"); // Limpa Captcha
+       } 
+       
        public function acessoCpf($tipo)
        {    
            if($this->getUf() == "es")
            {
-               $trfInicial = curl_init(JFES."externo_controlador.php?acao=processo_consulta_publica");
+               $trfInicial = curl_init(JFES.CONTROLADOR);
            }
 
            else
            {
-               $trfInicial = curl_init(JFRJ."externo_controlador.php?acao=processo_consulta_publica");
+               $trfInicial = curl_init(JFRJ.CONTROLADOR);
            }
 
             curl_setopt($trfInicial, CURLOPT_RETURNTRANSFER, true);
@@ -119,7 +125,6 @@
             curl_setopt($trfInicial, CURLOPT_COOKIE, $this->getSession());
             $site = curl_exec($trfInicial); // Atribui retorno da página com os dados enviados à variável
             curl_close($trfInicial);
-            print_r($site);
             $dom = HtmlDomParser::str_get_html($site);
             if(!$dom->find("input#txtCaptcha"))
             {
@@ -129,13 +134,13 @@
             {
                 if($this->getUf() == "es")
                 {
-                    $ch = curl_init(JFES."lib/captcha/Captcha.php");
+                    $ch = curl_init(JFES.CAPTCHA);
                 }
                 else
                 {
-                    $ch = curl_init(JFRJ."lib/captcha/Captcha.php");
+                    $ch = curl_init(JFRJ.CAPTCHA);
                 }
-                $fp = fopen("captcha.png" , "wb");
+                $fp = fopen("captchaTRF2.png" , "wb");
                 
                 curl_setopt($ch, CURLOPT_FILE, $fp);
                 curl_setopt($ch, CURLOPT_COOKIE, $this->getSession());
@@ -144,9 +149,9 @@
                 curl_close($ch);
                 fclose($fp);
 
-                system("magick convert -colorspace Gray -level 0,30%,0,1 -crop 140x100+30+10 captcha.png captcha-limpo.png"); // Limpa Captcha
+                $this->limpaCaptcha();
                 
-                $dados["txtCaptcha"] = (new TesseractOCR("captcha-limpo.png"))->run(); // Roda OCR
+                $dados["txtCaptcha"] = (new TesseractOCR("captcha-TRF2-limpo.png"))->run(); // Roda OCR
               
                 if($this->getUf() == "es")
                 {
