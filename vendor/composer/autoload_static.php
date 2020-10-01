@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitfaaa1341ed744e8b0e61a699c3895932
+class ComposerStaticInitd67a17b16f626673d00b184beaad4e1e
 {
     public static $files = array (
         '1350605cd05dc362850093948ac2586c' => __DIR__ . '/../..' . '/source/Config.php',
@@ -48,14 +48,21 @@ class ComposerStaticInitfaaa1341ed744e8b0e61a699c3895932
                 0 => __DIR__ . '/..' . '/sunra/php-simple-html-dom-parser/Src',
             ),
         ),
+        'K' => 
+        array (
+            'KubAT\\PhpSimple\\HtmlDomParser' => 
+            array (
+                0 => __DIR__ . '/..' . '/kub-at/php-simple-html-dom-parser/src',
+            ),
+        ),
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitfaaa1341ed744e8b0e61a699c3895932::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitfaaa1341ed744e8b0e61a699c3895932::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitfaaa1341ed744e8b0e61a699c3895932::$prefixesPsr0;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitd67a17b16f626673d00b184beaad4e1e::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitd67a17b16f626673d00b184beaad4e1e::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitd67a17b16f626673d00b184beaad4e1e::$prefixesPsr0;
 
         }, null, ClassLoader::class);
     }

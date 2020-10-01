@@ -1,5 +1,4 @@
 <?php namespace thiagoalessio\TesseractOCR\Tests;
-use SebastianBergmann\CodeCoverage\CodeCoverage;
 
 require_once __DIR__.'/../vendor/autoload.php';
 
